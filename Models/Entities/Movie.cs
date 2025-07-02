@@ -14,6 +14,9 @@ namespace MovieApi.Models.Entities
         public required string Genre { get; set; } = string.Empty;
         public int Duration { get; set; }
 
+        // Navigation property
+        public MovieDetails MovieDetails { get; set; } = null!;
+
 
 
     }
