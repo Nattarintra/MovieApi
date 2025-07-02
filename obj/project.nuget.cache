@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "TmDsz6clRcQ=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\natta\\Desktop\\lexicon\\MovieApi\\MovieApi\\MovieApi.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\natta\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.5\\microsoft.aspnetcore.openapi.9.0.5.nupkg.sha512",
+    "C:\\Users\\natta\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
