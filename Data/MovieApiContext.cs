@@ -18,12 +18,17 @@ namespace MovieApi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Movie>()
                 .HasOne(m => m.MovieDetails)
                 .WithOne(md => md.Movie)
-                .HasForeignKey<MovieDetails>(md => md.MovieId);
+                .HasForeignKey<MovieDetails>(md => md.MovieId)
+                .IsRequired();
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<MovieDetails>()
+                .HasIndex(md => md.MovieId)
+                .IsUnique();
+
         }
     }
 }

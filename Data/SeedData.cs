@@ -48,7 +48,7 @@ namespace MovieApi.Data
                             "Japanese", 
                             "Korean"
                             ),
-                        Budget = faker.Random.Decimal(1_000_000, 200_000_000)
+                        Budget = faker.Random.Int(1_000_000, 200_000_000)
                     }
                 };
 

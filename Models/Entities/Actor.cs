@@ -8,8 +8,11 @@ namespace MovieApi.Models.Entities
 
         [Required]
         public required string Name { get; set; } = string.Empty;
-        // The birth year of the actor
+       
         public int BirthYear { get; set; }
+        
+        // Navigation property
+        public ICollection<Movie> Movies { get; set; } = new List<Movie>(); // N:M relationship with Movie
 
 
 

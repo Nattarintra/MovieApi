@@ -16,6 +16,10 @@ namespace MovieApi.Models.Entities
 
         // Navigation property
         public MovieDetails MovieDetails { get; set; } = null!;
+       
+        public ICollection<Review> Reviews { get; set; } = new List<Review>(); // 1:M
+        
+        public ICollection<Actor> Actors { get; set; } = new List<Actor>(); // N:M relationship with Actor
 
 
 

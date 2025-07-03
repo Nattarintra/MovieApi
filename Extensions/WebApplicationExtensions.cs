@@ -1,21 +1,21 @@
-﻿using MovieApi.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieApi.Data;
 using System.Diagnostics;
 
 namespace MovieApi.Extensions
 {
-    public class WebApplicationExtensions
-    {
-        //public static object SeedData { get; private set; }
-
-        public static async Task SeedDataAsynce(this IApplicationBuilder app)
+    public static class WebApplicationExtensions
+    {   
+        public static async Task SeedDataAsync(this IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var serviceProvider = scope.ServiceProvider;
                 var context = serviceProvider.GetRequiredService<MovieApiContext>();
 
-                await context.Database.EnsureCreatedAsync();
-                // await context.Database.EnsureDeletedAsync();
+                //await context.Database.EnsureCreatedAsync();
+                //await context.Database.EnsureDeletedAsync();
+                await context.Database.MigrateAsync();
 
                 try
                 {
@@ -26,15 +26,8 @@ namespace MovieApi.Extensions
                     Debug.WriteLine(ex);
                     throw;
                 }
-            }
-
-           
-
-
+            }          
         }
-
-
-
 
     }
 }
