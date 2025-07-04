@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieApi.Data;
+using MovieApi.Models.Dtos;
 using MovieApi.Models.Entities;
 
 namespace MovieApi.Controllers
@@ -39,6 +40,8 @@ namespace MovieApi.Controllers
         {
             var movie = await _context.Movies
                 .Include(m => m.MovieDetails)
+                .Include(m => m.Reviews)       // Include related Reviews
+                .Include(m => m.Actors)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (movie == null)
@@ -83,8 +86,22 @@ namespace MovieApi.Controllers
         // POST: api/Movies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Movie>> PostMovie(Movie movie)
+        public async Task<IActionResult> PostMovie(MovieCreateDto dto)
         {
+            var movie = new Movie
+            {
+                Title = dto.Title,
+                Genre = dto.Genre,
+                Year = dto.Year,
+                Duration = dto.Duration,
+                MovieDetails = new MovieDetails
+                {
+                    Synopsis = dto.MovieDetails.Synopsis,
+                    Language = dto.MovieDetails.Language,
+                    Budget = dto.MovieDetails.Budget
+                }
+            };
+
             _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
 

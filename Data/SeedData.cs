@@ -43,16 +43,37 @@ namespace MovieApi.Data
                         Language = faker.PickRandom(
                             "English", 
                             "Swedish", 
-                            "French", 
-                            "German", 
-                            "Japanese", 
                             "Korean"
                             ),
                         Budget = faker.Random.Int(1_000_000, 200_000_000)
                     }
                 };
 
+                // Add some random actors to the movie
+                for (int a = 0; a < faker.Random.Int(1, 3); a++)
+                {
+                    movie.Actors.Add(new Actor
+                    {
+                        Name = faker.Name.FullName(),
+                        BirthYear = faker.Date.Past(30).Year
+                    });
+
+                }
+
+                // Add some random reviews to the movie
+                for (int r = 0; r < faker.Random.Int(1, 3); r++)
+                {
+                    movie.Reviews.Add(new Review
+                    {
+                        ReviewerName = faker.Name.FullName(),
+                        Rating = faker.Random.Int(1, 5),
+                        Comment = faker.Lorem.Sentence(5,10)
+                    });
+                }
+
                 movies.Add(movie);
+
+
             }
             return movies;
 

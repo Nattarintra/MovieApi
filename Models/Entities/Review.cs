@@ -1,4 +1,6 @@
-﻿namespace MovieApi.Models.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace MovieApi.Models.Entities
 {
     public class Review
     {
@@ -11,6 +13,7 @@
         public int MovieId { get; set; } // M:1 relationship with Movie
 
         // Navigation property
+        [JsonIgnore]
         public Movie Movie { get; set; } = null!; 
     }
 }
