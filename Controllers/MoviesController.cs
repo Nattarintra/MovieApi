@@ -24,14 +24,27 @@ namespace MovieApi.Controllers
 
         // GET: api/Movies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Movie>>> GetMovie()
+        public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovie()
         {
             var movies = await _context.Movies
-                .Include(m => m.MovieDetails) // Include related MovieDetails
-                .Include(m => m.Reviews)       // Include related Reviews
-                .Include(m => m.Actors)        // Include related Actors
-                .ToListAsync(); 
-            return movies;
+                .Include(m => m.MovieDetails) 
+                .ToListAsync();
+            var movieDtos = movies.Select(
+                     m => new MovieDto(
+                     m.Title,
+                     m.Year,
+                     m.Genre,
+                     m.Duration,
+                     MovieDetails: new MovieDetailsDto
+                        (
+                            Synopsis: m.MovieDetails.Synopsis,
+                            Language: m.MovieDetails.Language,
+                            Budget: m.MovieDetails.Budget
+                        )
+                      ));
+
+            return Ok(movieDtos);
+            
         }
 
         // GET: api/Movies/5
@@ -39,6 +52,7 @@ namespace MovieApi.Controllers
         public async Task<ActionResult<MovieDto>> GetMovie(int id)
         {
             var movie = await _context.Movies
+                .Include(m => m.MovieDetails)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (movie == null)
@@ -51,10 +65,16 @@ namespace MovieApi.Controllers
                 Title: movie.Title,
                 Year: movie.Year,
                 Genre: movie.Genre,
-                Duration: movie.Duration
+                Duration: movie.Duration,
+                MovieDetails: new MovieDetailsDto
+                (
+                    Synopsis: movie.MovieDetails.Synopsis,
+                    Language: movie.MovieDetails.Language,
+                    Budget: movie.MovieDetails.Budget
+                )
             );
 
-            return moveieDto;
+            return Ok(moveieDto);
         }
  
         // GET: api/Movies/5/details 
@@ -63,7 +83,7 @@ namespace MovieApi.Controllers
         {
             var movie = await _context.Movies
                 .Include(m => m.MovieDetails)
-                .Include(m => m.Reviews)       // Include related Reviews
+                .Include(m => m.Reviews)       
                 .Include(m => m.Actors)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -90,18 +110,34 @@ namespace MovieApi.Controllers
                 .Select(a => new ActorDto(a.Name, a.BirthYear))
                 .ToList() ?? new List<ActorDto>()
             );
-            return movieDetailDto;
+            return Ok(movieDetailDto);
         }
 
 
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovie(int id, Movie movie)
+        public async Task<IActionResult> PutMovie(int id, MovieUpdateDto mDto)
         {
-            if (id != movie.Id)
+            var movie = await _context.Movies
+                .Include(m => m.MovieDetails)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            
+            if (movie is null)
             {
-                return BadRequest();
+                return NotFound();
+            }
+            // Update entity from DTO
+            movie.Title = mDto.Title;
+            movie.Year = mDto.Year;
+            movie.Genre = mDto.Genre;
+            movie.Duration = mDto.Duration;
+
+            if (movie.MovieDetails != null && mDto.MovieDetails != null)
+            {
+                movie.MovieDetails.Synopsis = mDto.MovieDetails.Synopsis;
+                movie.MovieDetails.Language = mDto.MovieDetails.Language;
+                movie.MovieDetails.Budget = mDto.MovieDetails.Budget;
             }
 
             _context.Entry(movie).State = EntityState.Modified;
