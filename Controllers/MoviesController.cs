@@ -36,12 +36,9 @@ namespace MovieApi.Controllers
 
         // GET: api/Movies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movie>> GetMovie(int id)
+        public async Task<ActionResult<MovieDto>> GetMovie(int id)
         {
             var movie = await _context.Movies
-                .Include(m => m.MovieDetails)
-                .Include(m => m.Reviews)       // Include related Reviews
-                .Include(m => m.Actors)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (movie == null)
@@ -49,7 +46,15 @@ namespace MovieApi.Controllers
                 return NotFound();
             }
 
-            return movie;
+            var moveieDto = new MovieDto
+            (
+                Title: movie.Title,
+                Year: movie.Year,
+                Genre: movie.Genre,
+                Duration: movie.Duration
+            );
+
+            return moveieDto;
         }
  
         // GET: api/Movies/5/details 
