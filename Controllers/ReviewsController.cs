@@ -31,7 +31,7 @@ namespace MovieApi.Controllers
             {
                 return NotFound("No actors found.");
             }
-            var reviewDtos= review.Select(r => new ReviewDto(r.ReviewerName, r.Comment, r.Rating)).ToList();
+            var reviewDtos= review.Select(r => new ReviewDto(r.Id, r.ReviewerName, r.Comment, r.Rating)).ToList();
             return reviewDtos;
         }
 

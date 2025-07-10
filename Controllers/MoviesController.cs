@@ -104,7 +104,7 @@ namespace MovieApi.Controllers
                     Budget: movie.MovieDetails.Budget
                 ),
                 Reviews: movie.Reviews?
-                .Select(r => new ReviewDto(r.ReviewerName,r.Comment, r.Rating))
+                .Select(r => new ReviewDto(r.Id,r.ReviewerName,r.Comment, r.Rating))
                 .ToList() ?? new List<ReviewDto>(),
                 Actors: movie.Actors?
                 .Select(a => new ActorDto(a.Id,a.Name, a.BirthYear))

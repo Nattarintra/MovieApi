@@ -18,12 +18,17 @@ namespace MovieApi.Controllers
         }
         // GET: api/movies/{movieId}/actors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Actor>>> GetActorsForMovie(int movieId)
+        public async Task<ActionResult<IEnumerable<ActorDto>>> GetActorsForMovie(int movieId)
         {
-            var movie = await _context.Movies.Include(m => m.Actors).FirstOrDefaultAsync(m => m.Id == movieId);
+            //var movie = await _context.Movies.Include(m => m.Actors).FirstOrDefaultAsync(m => m.Id == movieId);
+            var movie = await _context.Movies.FindAsync(movieId);
             if (movie == null) return NotFound($"Movie {movieId} not found.");
+            var actors = await _context.Actors
+                .Where(a => a.Movies.Any(m => m.Id == movieId))
+                .Select(a => new ActorDto(a.Id, a.Name, a.BirthYear))
+                .ToListAsync();
 
-            return Ok(movie.Actors);
+            return Ok(actors);   
         }
         // POST: api/movies/{movieId}/actors/{actorId}
 
