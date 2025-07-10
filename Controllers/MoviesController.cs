@@ -24,27 +24,41 @@ namespace MovieApi.Controllers
 
         // GET: api/Movies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovie()
+        public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies(string? genre, int? year)
         {
-            var movies = await _context.Movies
-                .Include(m => m.MovieDetails) 
-                .ToListAsync();
+         
+            var query = _context.Movies.AsQueryable();
+            if (!string.IsNullOrEmpty(genre))
+            {
+                query = query.Where(m => m.Genre.ToLower().Contains(genre.ToLower()));
+            }
+            if (year.HasValue)
+            {
+                query = query.Where(m => m.Year == year.Value);
+            }
+
+            var movies = await query.Include(m => m.MovieDetails).ToListAsync();
+
+            if (movies == null || !movies.Any())
+            {
+                return NotFound("No movies found matching the criteria.");
+            }
+
             var movieDtos = movies.Select(
                      m => new MovieDto(
                      m.Title,
                      m.Year,
                      m.Genre,
                      m.Duration,
-                     MovieDetails: new MovieDetailsDto
+                    MovieDetails: new MovieDetailsDto
                         (
                             Synopsis: m.MovieDetails.Synopsis,
                             Language: m.MovieDetails.Language,
                             Budget: m.MovieDetails.Budget
                         )
-                      ));
+                     )).ToList();
 
             return Ok(movieDtos);
-            
         }
 
         // GET: api/Movies/5
@@ -112,7 +126,6 @@ namespace MovieApi.Controllers
             );
             return Ok(movieDetailDto);
         }
-
 
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
