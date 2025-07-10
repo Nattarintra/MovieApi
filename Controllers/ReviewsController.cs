@@ -26,7 +26,7 @@ namespace MovieApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReviewDto>>> GetReview()
         {
-            var review = await _context.Review.ToListAsync();
+            var review = await _context.Reviews.ToListAsync();
             if (review == null || !review.Any())
             {
                 return NotFound("No actors found.");
@@ -39,7 +39,7 @@ namespace MovieApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Review>> GetReview(int id)
         {
-            var review = await _context.Review.FindAsync(id);
+            var review = await _context.Reviews.FindAsync(id);
 
             if (review == null)
             {
@@ -85,7 +85,7 @@ namespace MovieApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Review>> PostReview(Review review)
         {
-            _context.Review.Add(review);
+            _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetReview", new { id = review.Id }, review);
@@ -95,13 +95,13 @@ namespace MovieApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReview(int id)
         {
-            var review = await _context.Review.FindAsync(id);
+            var review = await _context.Reviews.FindAsync(id);
             if (review == null)
             {
                 return NotFound();
             }
 
-            _context.Review.Remove(review);
+            _context.Reviews.Remove(review);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -109,7 +109,7 @@ namespace MovieApi.Controllers
 
         private bool ReviewExists(int id)
         {
-            return _context.Review.Any(e => e.Id == id);
+            return _context.Reviews.Any(e => e.Id == id);
         }
     }
 }

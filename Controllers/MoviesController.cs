@@ -107,7 +107,7 @@ namespace MovieApi.Controllers
                 .Select(r => new ReviewDto(r.ReviewerName,r.Comment, r.Rating))
                 .ToList() ?? new List<ReviewDto>(),
                 Actors: movie.Actors?
-                .Select(a => new ActorDto(a.Name, a.BirthYear))
+                .Select(a => new ActorDto(a.Id,a.Name, a.BirthYear))
                 .ToList() ?? new List<ActorDto>()
             );
             return Ok(movieDetailDto);

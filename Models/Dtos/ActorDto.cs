@@ -1,5 +1,5 @@
 ﻿namespace MovieApi.Models.Dtos
 {
-    public record ActorDto(string Name, int BirthYear);
+    public record ActorDto(int id, string Name, int BirthYear);
     
 }
